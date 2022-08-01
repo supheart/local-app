@@ -1,0 +1,28 @@
+span.user-field {
+  color: #091e42;
+  padding-right: 5px;
+  align-items: center;
+  :global {
+    .username {
+      line-height: 20px;
+      font-size: 14px;
+    }
+    .disabled {
+      color: var(--color-gray-7);
+    }
+    .deleted {
+      text-decoration: line-through;
+    }
+  }
+}
+
+.empty-user {
+  color: var(--color-gray-6);
+  display: flex;
+  align-items: center;
+  .user-icon {
+    color: var(--color-gray-6);
+    margin-right: 3px;
+    font-size: 20px;
+  }
+}

@@ -1,0 +1,121 @@
+@import '../common/styles/_variables.less';
+
+.sidebar {
+  position: relative;
+  z-index: 199;    
+  --sideWidth: 240px;
+  --flyoutWidth: 240px;
+  --controlWidth: 24px;
+
+  .sidebar-nav {
+    height: 1px;
+    width: var(--sideWidth, 0px);
+    transition: width 300ms cubic-bezier(0.2, 0, 0, 1) 0s;
+  }
+  .sidebar-container {
+    position: fixed;
+    top: @header-height;
+    bottom: 0;
+    width: var(--sideWidth, 0px);
+    // width: 240px;
+    // transition: width 300ms cubic-bezier(0.2, 0, 0, 1) 0s;
+    .sidebar-content {
+      position: relative;
+      height: 100%;
+      overflow: hidden;
+    }
+    .sidebar-control {
+      position: absolute;
+      left: 100%;
+      top: 0px;
+      bottom: 0px;
+      outline: none;
+      .control-shadow {
+        position: absolute;
+        background: linear-gradient(to left, rgba(0, 0, 0, 0.2) 0px, rgba(0, 0, 0, 0.2) 1px, rgba(0, 0, 0, 0.1) 1px, rgba(0, 0, 0, 0) 100%);
+        bottom: 0px;
+        top: 0px;
+        left: -1px;
+        opacity: 0.5;
+        pointer-events: none;
+        transition-duration: 0.22s;
+        transition-property: left, opacity, width;
+        transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
+        width: 3px;
+      }
+      .control-content {
+        cursor: ew-resize;
+        height: 100%;
+        width: var(--controlWidth, 24px);
+        padding: 0px;
+        border: 0px;
+        background-color: transparent;
+        & > span {
+          display: block;
+          height: 100%;
+          transition: background-color 200ms ease 0s;
+          width: 2px;
+        }
+        &:enabled:hover {
+          & > span {
+            background-color: rgb(76, 154, 255);
+          }
+          & + .control-icon {
+            opacity: 1 !important;
+          }
+        }
+      }
+      .control-icon {
+        position: absolute;
+        background-color: rgb(255, 255, 255);
+        top: 32px;
+        left: 0px;
+        transform: rotateY(180deg);
+        border: 0px;
+        border-radius: 50%;
+        box-shadow: rgb(9 30 66 / 8%) 0px 0px 0px 1px, rgb(9 30 66 / 8%) 0px 2px 4px 1px;
+        color: rgb(107, 119, 140);
+        cursor: pointer;
+        height: 24px;
+        opacity: 1;
+        outline: 0px;
+        padding: 0px;
+        transition: background-color 100ms linear 0s, color 100ms linear 0s, opacity 350ms cubic-bezier(0.2, 0, 0, 1) 0s;
+        width: 24px;
+        transform-origin: 7px center;
+        &.fold {
+          transform: rotateY(0deg) translateX(-50%);
+        }
+        .icon-content {
+          display: inline-block;
+          flex-shrink: 0;
+          line-height: 1;
+        }
+        .icon-container {
+          position: absolute;
+          inset: -8px -12px -8px -8px;
+        }
+        &[data-resize-button=true] {
+          opacity: 0;
+        }
+        &:hover {
+          background-color: rgb(76, 154, 255);
+          color: rgb(255, 255, 255);
+          opacity: 1;
+        }
+      }
+    }
+  }
+  &.fold {
+    &.hover {
+      .sidebar-container {
+        width: var(--flyoutWidth, 240px);
+      }
+    }
+  }
+  &:hover {
+    .control-icon {
+      opacity: 1 !important;
+    }
+  }
+}

@@ -1,0 +1,45 @@
+@import '../common/styles/_variables.less';
+
+.workspace-wrapper {
+  position: relative;
+  height: 100%;
+
+  .workspace-side {
+    background-color: #F5F6F8;
+  }
+
+  .workspace-content {
+    overflow: auto;
+    height: calc(~'100vh - @{header-height}');
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    transition: width linear 0.3s;
+    // margin-left: -15px;
+  }
+
+  .workspace-sidebar-setting {
+    // 和上面的面板菜单对齐
+    padding: 15px 29px;
+    cursor: pointer;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    transition: all 0.3s;
+    background-color: inherit;
+    border-top: 1px solid rgba(9, 30, 66, 0.06);
+    &:hover {
+      color: @blue-6;
+    }
+
+    &-icon {
+      margin-right: 16px;
+      font-size: 16px;
+    }
+  }
+}

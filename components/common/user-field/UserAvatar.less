@@ -1,0 +1,26 @@
+@avatar-size: 20px;
+
+span.avatar-item {
+  &.avatar {
+    width: @avatar-size;
+    height: @avatar-size;
+    border-radius: 50%;
+    display: inline-block;
+    background: #fff center/contain no-repeat;
+    margin-right: 3px;
+    vertical-align: middle;
+  }
+
+  &.default-avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: @avatar-size;
+    height: @avatar-size;
+    border-radius: 50%;
+    background: #5243aa;
+    margin-right: 3px;
+    font-size: 12px;
+    color: #fff;
+  }
+}

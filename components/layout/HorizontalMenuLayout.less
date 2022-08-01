@@ -1,0 +1,97 @@
+@import '../common/styles/_variables';
+
+@site-padding-h: 20px;
+
+.horizontal-layout {
+  min-height: 100vh;
+  background-color: white !important;
+  overflow: hidden;
+
+  &:global(.no-header) {
+    .site-layout {
+      height: 100vh;
+      margin-top: 0;
+    }
+  }
+
+  .header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    width: 100%;
+    display: flex;
+    background-color: white;
+    padding: 0 @site-padding-h; // 覆盖antd的50px
+    border-bottom: 1px solid rgb(240, 240, 240);
+    box-shadow: 0px 2px 4px #eee;
+
+    height: @header-height;
+    line-height: @header-height;
+
+    .logo {
+      height: 100%;
+      margin: 0;
+
+      .brand {
+        width: 40px;
+        height: 100%;
+      }
+
+      .name {
+        font-size: 24px;
+        font-weight: bolder;
+        margin-right: 20px;
+      }
+    }
+
+    .app-menu-container {
+      max-width: 60%;
+    }
+
+    > span {
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      margin-right: 16px;
+      :global {
+        .avatar {
+          font-size: 14px;
+          margin-right: 0px; // 覆盖antd的16px
+        }
+      }
+    }
+
+    > span:hover {
+      color: #1890ff;
+      cursor: pointer;
+    }
+
+    :global {
+      .avatar {
+        font-size: 14px;
+        margin-right: 0px; // 覆盖antd的16px
+        &:hover .down-icon {
+          color: #091e42;
+        }
+      }
+      .ant-menu-horizontal {
+        border-bottom: 0;
+      }
+    }
+  }
+
+  .site-layout {
+    margin-top: @header-height;
+    padding: 24px @site-padding-h 30px;
+    height: calc(~'100vh - @{header-height}');
+    overflow: auto;
+  }
+
+  .site-layout.no-padding {
+    padding: 0px;
+  }
+  .site-layout.no-padding-bottom {
+    padding-bottom: 0px;
+  }
+}

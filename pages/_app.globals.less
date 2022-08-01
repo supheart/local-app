@@ -1,0 +1,144 @@
+@import "../components/common/styles/vars.css";
+// @import "~antd/dist/antd.less";
+// @import "../styles/subgrade-variable.less";
+// @import "../styles/antd-theme.less";
+
+body#local-body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
+    'Droid Sans', 'Helvetica Neue', sans-serif;
+
+  // 修改当前所有的tooltip的背景色
+  .ant-tooltip-inner,
+  .ant-tooltip-arrow-content {
+    background-color: #576473;
+  }
+}
+
+#local-app {
+  --menu-item-active-bg: var(--color-brand-1);
+  --menu-highlight-color: var(--btn-primary-border-color);
+  --page-header-title-font-size: 24px;
+  --page-header-title-font-weight: 400;
+
+  .ant-layout-sider-children {
+    .ant-menu-item {
+      margin: 8px 0;
+    }
+  }
+
+  .ant-page-header-heading-title {
+    font-weight: @bold-font-weight;
+  }
+
+  .BaseTable {
+    font-size: 14px;
+  }
+
+  .BaseTable__table-frozen-right {
+    box-shadow: -1px 0 2px 0 #eee;
+  }
+
+  // 设置全局antd collapse样式  覆盖原本自带样式
+  .ant-collapse {
+    border: none;
+    background: #fff;
+
+    .ant-collapse-item {
+      border: none;
+
+      .ant-collapse-header {
+        padding: 0;
+        height: @height-sm;
+        min-height: @height-sm;
+        font-weight: @bold-font-weight;
+
+        .ant-collapse-arrow {
+          margin-right: 8px;
+        }
+      }
+
+      .ant-collapse-content {
+        border: none;
+
+        .ant-collapse-content-box {
+          padding: 0px;
+          &:not(:empty) {
+            margin-top: 8px;
+          }
+        }
+      }
+    }
+  }
+  .delete-color {
+    color: #f27c49;
+  }
+}
+
+.ant-modal-root .delete-modal {
+  .ant-modal-body {
+    padding: 28px 24px 24px;
+
+    .ant-modal-confirm-body {
+      svg {
+        width: 26px;
+        height: 26px;
+        margin-right: 9px;
+      }
+
+      .ant-modal-confirm-title {
+        font-size: 18px;
+        height: 26px;
+        font-weight: 500;
+        line-height: 26px;
+      }
+    }
+
+    .ant-modal-confirm-btns {
+      margin-top: 28px;
+
+      .ant-btn-primary {
+        margin-left: 12px;
+        background-color: var(--color-cyan-6);
+        border-color: var(--color-cyan-6);
+      }
+    }
+  }
+}
+
+.ant-modal-body {
+  overflow: auto;
+}
+
+// 设置全局滚动条样式
+:global {
+  div {
+    &::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: @gray-6;
+      border-radius: 3px;
+    }
+  }
+}
+
+.ant-dropdown-menu-title-content {
+  span.anticon {
+    margin-right: 4px;
+  }
+}
+
+.ant-page-header-heading {
+  font-weight: 500;
+  min-height: 32px;
+  line-height: 32px;
+
+  .ant-page-header-heading-extra,
+  .ant-page-header-heading-left {
+    margin: 0;
+  }
+
+}
