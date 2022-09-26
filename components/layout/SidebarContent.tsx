@@ -1,9 +1,16 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import debug from 'debug';
 import { RightArrow } from 'icons';
 
 import storage from 'lib/storage';
 
 import style from './SidebarContent.less';
+
+type StateConfig = {
+  sidebarWidth: number;
+  folding: boolean;
+};
+const log = debug('sidebar:');
 
 // 标识鼠标从哪个方向进入
 const MouseOverFromType = {
@@ -11,8 +18,10 @@ const MouseOverFromType = {
   Control: 'Control', // 从收缩控制按钮进入
   Other: 'Other', // 从其他内容进入
 };
+const LAYOUT_STATE = 'LAYOUT_STATE';
 const SIDEBAR_CONTROL = 'sidebarControl';
-const DEFAULT_STATE = { sidebarWidth: 240 };
+const MIN_CONTROL_WIDTH = 20; // 最小空间宽度
+const DEFAULT_STATE: StateConfig = { sidebarWidth: 240, folding: false };
 
 const SidebarContent: React.FC<React.PropsWithChildren<{ className?: string }>> = ({ className, children }) => {
   const sidebarRef = useRef(null); // 整个sidebar的dom节点
@@ -23,19 +32,47 @@ const SidebarContent: React.FC<React.PropsWithChildren<{ className?: string }>> 
   const mouseOverFrom = useRef(MouseOverFromType.Other); // 记录鼠标移动的组件方向
   const [isFold, setIsFold] = useState(false); // 是否收起
   const [isHover, setIsHover] = useState(false); // 是否聚焦到侧边栏
-  const [width, setWidth] = useState(240);
+  const [moving, setMoving] = useState(false); // 鼠标是否按下，在移动中
 
-  // const splitMove = useCallback(() => {
+  // 侧边栏展开
+  const expandHandler = useCallback(() => {
+    // 展开时获取flyoutWidth的值还原sideWidth
+    const flyoutWidth = sidebarRef.current.style.getPropertyValue('--flyoutWidth');
+    log('expand:flyoutWidth', flyoutWidth);
+    sidebarRef.current.style.setProperty('--sideWidth', flyoutWidth);
+    sidebarRef.current.style.setProperty('--controlWidth', '24px');
+    setIsFold(false);
+    // 记录状态
+    const defaultLayoutConfig = storage.getItem(LAYOUT_STATE, DEFAULT_STATE);
+    storage.setItem(LAYOUT_STATE, { ...defaultLayoutConfig, folding: false });
+  }, [sidebarRef]);
 
-  // }, []);
+  // 侧边栏收起
+  const foldHandler = useCallback(() => {
+    log('fold:SIDEBAR_CONTROL', MIN_CONTROL_WIDTH);
+    // 收起时直接改变sideWidth
+    setIsHover(false);
+    sidebarRef.current.style.setProperty('--sideWidth', `${MIN_CONTROL_WIDTH}px`);
+    sidebarRef.current.style.setProperty('--controlWidth', '0');
+    setIsFold(true);
+    // 记录状态
+    const defaultLayoutConfig = storage.getItem(LAYOUT_STATE, DEFAULT_STATE);
+    storage.setItem(LAYOUT_STATE, { ...defaultLayoutConfig, folding: true });
+  }, [sidebarRef]);
+
+  // 第一次渲染回显
   useEffect(() => {
-    const defaultLayoutConfig = storage.getItem('layout_state', DEFAULT_STATE);
+    const defaultLayoutConfig = storage.getItem(LAYOUT_STATE, DEFAULT_STATE);
+    log('init', defaultLayoutConfig);
     if (defaultLayoutConfig.sidebarWidth) {
       const sidebarWidth = `${defaultLayoutConfig.sidebarWidth}px`;
       sidebarRef.current.style.setProperty('--sideWidth', sidebarWidth);
       sidebarRef.current.style.setProperty('--flyoutWidth', sidebarWidth);
     }
-  }, []);
+    if (defaultLayoutConfig.folding) {
+      foldHandler();
+    }
+  }, [foldHandler]);
 
   // 每次鼠标从侧边栏移入收缩图标/收缩图标移入侧边栏，记录移入的方向
   const signMouseFrom = (id: string) => {
@@ -45,36 +82,45 @@ const SidebarContent: React.FC<React.PropsWithChildren<{ className?: string }>> 
     }, 300);
   };
 
+  // 拖拽鼠标时改变左侧栏宽度
   const changeWidth = useCallback((clientX: number) => {
     if (!dragging.current) return;
+    // 计算偏移量
     const offsetX = clientX - previousClientX.current;
     previousClientX.current = clientX;
 
     const sideWidth = sidebarRef.current.style.getPropertyValue('--sideWidth');
     if (sideWidth) {
-      const sideNumber = pixelToNumber(sideWidth);
-      console.log('*******', sideNumber, offsetX, `${sideNumber + offsetX}px`);
-      // dd.current.style.width = `${sideNumber + offsetX}px`;
+      const halfBodyWidth = Math.ceil(window.document.body.clientWidth / 2); // 一半屏幕宽度
+      let sideNumber = pixelToNumber(sideWidth);
+      log(
+        'width change',
+        `clientX:${clientX}, sideNumber:${sideNumber}, offsetX:${offsetX}, nowSide:${sideNumber + offsetX}px`,
+      );
+      // 这里如果鼠标向右移动超出了拖拽组件的位置，这时再向左拖到时不做处理
+      if (clientX > halfBodyWidth + MIN_CONTROL_WIDTH) return;
+      // 超出最大或最小都不处理
+      if (sideNumber < MIN_CONTROL_WIDTH && offsetX < 0) {
+        sideNumber = MIN_CONTROL_WIDTH;
+        return;
+      }
+      if (sideNumber > halfBodyWidth && offsetX > 0) {
+        sideNumber = halfBodyWidth;
+        return;
+      }
       sidebarRef.current.style.setProperty('--sideWidth', `${sideNumber + offsetX}px`);
-      sidebarRef.current.style.setProperty('--flyoutWidth', `${sideNumber + offsetX}px`);
     }
   }, []);
 
+  // 鼠标移动方法
   const splitMoveHandler = useCallback(
     (event: MouseEvent) => {
-      // if (!dragging.current) return;
-      // setWidth(currentWidth => {
-      //   const change = event.clientX - previousClientX.current;
-      //   previousClientX.current = event.clientX;
-      //   console.log(334455, currentWidth + change);
-      //   return currentWidth + change;
-      // });
-      // changeWidth(event.clientX);
       if (scheduledAnimationFrame.current) {
         return;
       }
 
       scheduledAnimationFrame.current = true;
+      // requestAnimationFrame
       window.requestAnimationFrame(() => {
         scheduledAnimationFrame.current = false;
         changeWidth(event.clientX);
@@ -83,17 +129,39 @@ const SidebarContent: React.FC<React.PropsWithChildren<{ className?: string }>> 
     [changeWidth],
   );
 
+  // 鼠标抬起
   const onDocumentMouseUp = useCallback(() => {
-    console.log(123, 'upupup');
     dragging.current = false;
+    setMoving(false);
+    const sideWidth = sidebarRef.current.style.getPropertyValue('--sideWidth');
+    log('mouse up, sideWidth:', sideWidth);
+    const sideNumber = pixelToNumber(sideWidth);
+    if (sideNumber < 150) {
+      // 如果在侧边栏的150像素范围内，直接收起
+      foldHandler();
+      return;
+    } else if (sideNumber < DEFAULT_STATE.sidebarWidth) {
+      // 在150到默认宽度的像素范围内，直接展开
+      sidebarRef.current.style.setProperty('--flyoutWidth', `${DEFAULT_STATE.sidebarWidth}px`);
+      expandHandler();
+      return;
+    }
+    // 保存记录宽度
+    log('log up', sideNumber);
+    const defaultLayoutConfig = storage.getItem(LAYOUT_STATE, DEFAULT_STATE);
+    storage.setItem(LAYOUT_STATE, { ...defaultLayoutConfig, sidebarWidth: sideNumber });
+    sidebarRef.current.style.setProperty('--flyoutWidth', `${sideNumber}px`);
+
     document.removeEventListener('mousemove', splitMoveHandler);
     document.removeEventListener('mouseup', onDocumentMouseUp);
-  }, [splitMoveHandler]);
+  }, [expandHandler, foldHandler, splitMoveHandler]);
 
+  // 鼠标按下
   const onDocumentMouseDown = useCallback(
     (event: MouseEvent) => {
       dragging.current = true;
       previousClientX.current = event.clientX;
+      setMoving(true);
 
       document.addEventListener('mousemove', splitMoveHandler);
       document.addEventListener('mouseup', onDocumentMouseUp);
@@ -105,6 +173,7 @@ const SidebarContent: React.FC<React.PropsWithChildren<{ className?: string }>> 
     [onDocumentMouseUp, splitMoveHandler],
   );
 
+  // 拖拽控件的鼠标事件监听
   useEffect(() => {
     if (split.current) {
       const splitDom = split.current;
@@ -135,6 +204,7 @@ const SidebarContent: React.FC<React.PropsWithChildren<{ className?: string }>> 
       };
       const onMouseOut = (event: Event & { target: { id?: string } }) => {
         if (isOver) {
+          // 鼠标移出拖拽控件，记录状态
           setIsHover(false);
           isOver = false;
           signMouseFrom(event.target.id);
@@ -157,22 +227,17 @@ const SidebarContent: React.FC<React.PropsWithChildren<{ className?: string }>> 
   const toggleFold = useCallback(() => {
     if (sidebarRef.current) {
       if (isFold) {
-        const flyoutWidth = sidebarRef.current.style.getPropertyValue('--flyoutWidth');
-        sidebarRef.current.style.setProperty('--sideWidth', flyoutWidth);
-        sidebarRef.current.style.setProperty('--controlWidth', '24px');
+        expandHandler();
       } else {
-        setIsHover(false);
-        sidebarRef.current.style.setProperty('--sideWidth', '20px');
-        sidebarRef.current.style.setProperty('--controlWidth', '0');
+        foldHandler();
       }
-      setIsFold(!isFold);
     }
-  }, [sidebarRef, isFold]);
+  }, [isFold, foldHandler, expandHandler]);
 
   return (
     <div id="sidebar" className={style('sidebar', { fold: isFold, hover: isHover })} ref={sidebarRef}>
       <div className={style('sidebar-nav')}>
-        <div className={style('sidebar-container')}>
+        <div className={style('sidebar-container', { move: moving })}>
           <div className={style('sidebar-content', className)}>{children}</div>
           <div className={style('sidebar-control')}>
             <div className={style('control-shadow')} />
@@ -192,7 +257,8 @@ const SidebarContent: React.FC<React.PropsWithChildren<{ className?: string }>> 
   );
 };
 
-function pixelToNumber(pixel: string, defaults?: number) {
+// 像素转数字
+function pixelToNumber(pixel: string, defaults?: number): number {
   if (!pixel) return 0;
   let result = parseInt(pixel);
   if (isNaN(result)) {

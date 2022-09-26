@@ -19,6 +19,7 @@
     "cnchar": "^3.2.2",
     "css-loader": "^6.7.1",
     "dayjs": "^1.11.4",
+    "debug": "^4.3.4",
     "extracted-loader": "^1.0.7",
     "hasha": "^5.2.2",
     "ignore-loader": "^0.1.2",
@@ -39,6 +40,7 @@
     "webpack": "^5.73.0"
   },
   "devDependencies": {
+    "@types/debug": "^4.1.7",
     "@types/node": "18.6.0",
     "@types/react": "18.0.15",
     "@types/react-dom": "18.0.6",

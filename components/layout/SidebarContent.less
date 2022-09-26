@@ -3,9 +3,9 @@
 .sidebar {
   position: relative;
   z-index: 199;    
-  --sideWidth: 240px;
-  --flyoutWidth: 240px;
-  --controlWidth: 24px;
+  --sideWidth: 0px; // 实际侧边栏宽度的变量
+  --flyoutWidth: 0px; // 用来记录展开的宽度
+  --controlWidth: 24px; // 拖拽控件的宽度
 
   .sidebar-nav {
     height: 1px;
@@ -16,11 +16,15 @@
     position: fixed;
     top: @header-height;
     bottom: 0;
+    min-width: 20px;
     width: var(--sideWidth, 0px);
-    // width: 240px;
-    // transition: width 300ms cubic-bezier(0.2, 0, 0, 1) 0s;
+    transition: width 300ms cubic-bezier(0.2, 0, 0, 1) 0s;
+    &.move {
+      transition: none;
+    }
     .sidebar-content {
       position: relative;
+      min-width: 20px;
       height: 100%;
       overflow: hidden;
     }
@@ -50,6 +54,7 @@
         padding: 0px;
         border: 0px;
         background-color: transparent;
+        outline: none;
         & > span {
           display: block;
           height: 100%;
