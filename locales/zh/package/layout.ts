@@ -6,7 +6,7 @@ const layout = {
     user: '用户信息修改',
     reset: '修改密码',
     logout: '退出登录',
-  }
-}
+  },
+};
 
 export default layout;

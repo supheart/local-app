@@ -1,0 +1,50 @@
+{
+  "nodes": [
+    {
+      "id": "1",
+      "type": "start",
+      "text": "Select Material",
+      "left": 300,
+      "top": 300,
+      "w": 32,
+      "h": 32
+    },
+    {
+      "id": "2",
+      "type": "task",
+      "text": "Is it in the public domain?",
+      "left": 300,
+      "top": 400,
+      "w": 64,
+      "h": 32
+    },
+    {
+      "id": "3",
+      "type": "task",
+      "text": "Is it Creative Commons?",
+      "left": 400,
+      "top": 400,
+      "w": 64,
+      "h": 32
+    },
+    {
+      "id": "4",
+      "type": "task",
+      "text": "Is it available from the publisher?",
+      "left": 300,
+      "top": 500,
+      "w": 64,
+      "h": 32
+    },
+    {
+      "id": "5",
+      "type": "task",
+      "text": "Can it be linked online?",
+      "left": 400,
+      "top": 500,
+      "w": 64,
+      "h": 32
+    }
+  ],
+  "edges": []
+}

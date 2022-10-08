@@ -1,4 +1,5 @@
 import layout from './package/layout';
+import workflow from './package/workflow';
 
 // const global = {
 //   api: {
@@ -82,6 +83,9 @@ import layout from './package/layout';
 
 const zh = {
   layout,
-}
+  pages: {
+    workflow,
+  },
+};
 
 export default zh;

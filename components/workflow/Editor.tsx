@@ -3,8 +3,8 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { EditOutlined } from '@ant-design/icons';
 import { Button, message, PageHeader } from 'antd';
+import { cloneDeep } from 'lodash';
 
-// import { cloneDeep } from 'lodash';
 import useI18n from 'lib/hooks/useI18n';
 import { useWorkflowState } from 'lib/hooks/useWorkflow';
 // import {
@@ -18,7 +18,7 @@ import { useWorkflowState } from 'lib/hooks/useWorkflow';
 import { NodeProps, TransitionProps, WorkflowProps } from 'lib/types/workflow';
 
 // import { ElementType, ModalType, StartNodeItem, UNIQUE_CODE } from './config';
-// import Palette from './Palette';
+import Palette from './Palette';
 // import PropertiesPanel from './PropertiesPanel';
 import { StatusPanel } from './status';
 
@@ -62,26 +62,27 @@ const Editor: React.FC<EditorProps> = ({ id, routerBack }) => {
     [id, formData?.name, t],
   );
 
-  // useEffect(() => {
-  //   const getWorkflow = async workflowId => {
-  //     const workflowObject = await new Parse.Query(WorkflowObject).equalTo('objectId', workflowId).first();
-  //     if (workflowObject) {
-  //       const nodes = workflowObject.get('nodes') || [];
-  //       const transitions = workflowObject.get('transitions') || [];
-  //       const name = workflowObject.get('name');
-  //       const description = workflowObject.get('description');
-  //       const usageScheme = workflowObject.get('usageScheme');
-  //       setCanDraft(!usageScheme?.length);
-  //       setDraggedStatus(nodes.map(node => node.statusId));
-  //       setFlowData({ nodes, transitions });
-  //       setInitialNodes(nodes.filter(node => node.statusId !== StartNodeItem.statusId).map(node => node.statusId));
-  //       setFormData({ objectId: workflowObject.id, name, description });
-  //     }
-  //   };
-  //   if (id) {
-  //     getWorkflow(id);
-  //   }
-  // }, [id]);
+  useEffect(() => {
+    // const getWorkflow = async workflowId => {
+    //   const workflowObject = await new Parse.Query(WorkflowObject).equalTo('objectId', workflowId).first();
+    //   if (workflowObject) {
+    //     const nodes = workflowObject.get('nodes') || [];
+    //     const transitions = workflowObject.get('transitions') || [];
+    //     const name = workflowObject.get('name');
+    //     const description = workflowObject.get('description');
+    //     const usageScheme = workflowObject.get('usageScheme');
+    //     setCanDraft(!usageScheme?.length);
+    //     setDraggedStatus(nodes.map(node => node.statusId));
+    //     setFlowData({ nodes, transitions });
+    //     setInitialNodes(nodes.filter(node => node.statusId !== StartNodeItem.statusId).map(node => node.statusId));
+    //     setFormData({ objectId: workflowObject.id, name, description });
+    //   }
+    // };
+    // if (id) {
+    //   getWorkflow(id);
+    // }
+    setFlowData({ nodes: [], transitions: [] });
+  }, [id]);
 
   // 判断当前状态是否有在事项中应用
   // const checkUsedStatus = useCallback(
@@ -338,6 +339,19 @@ const Editor: React.FC<EditorProps> = ({ id, routerBack }) => {
   //   [currentNode?.parameters?.roles],
   // );
 
+  const save = useCallback((draft: boolean) => {
+    console.info(draft);
+  }, []);
+
+  const updateNode = useCallback((element?: NodeProps | TransitionProps, updateForceNode?: boolean) => {
+    console.info(element, updateForceNode);
+  }, []);
+
+  const checkUsedStatus = useCallback((statusId: string): Promise<boolean> => {
+    console.info(statusId);
+    return Promise.resolve(true);
+  }, []);
+
   return (
     <>
       <div className={cx('workflow-wrapper')}>
@@ -363,7 +377,7 @@ const Editor: React.FC<EditorProps> = ({ id, routerBack }) => {
               getList={getStatusList}
               draggedStatus={draggedStatus}
             />
-            {/* {flowData.nodes && (
+            {flowData.nodes && (
               <Palette
                 ref={paletteRef}
                 initialData={cloneDeep(flowData)}
@@ -372,7 +386,7 @@ const Editor: React.FC<EditorProps> = ({ id, routerBack }) => {
                 updateNewDragStatus={setNewDragStatus}
                 checkUsedStatus={checkUsedStatus}
               />
-            )} */}
+            )}
             {/* <PropertiesPanel
               users={users}
               roles={roles}

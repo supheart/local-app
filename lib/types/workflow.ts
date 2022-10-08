@@ -28,7 +28,7 @@ export interface BaseNodeProps {
 export interface NodeProps extends BaseNodeProps {
   width: number;
   height: number;
-  key: string;
+  key: StatusType['type'];
   bgColor?: string;
   x: number;
   y: number;
