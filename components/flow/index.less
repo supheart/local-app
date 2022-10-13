@@ -1,0 +1,175 @@
+.workflow-wrapper {
+  min-height: 600px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  .workflow-header {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .workflow-container {
+    flex: 1;
+    display: flex;
+    overflow-y: hidden;
+  }
+  .edit-title {
+    padding-left: 12px;
+    color: #041d4d;
+    cursor: pointer;
+    & > span {
+      padding-left: 8px;
+    }
+    &:hover {
+      color: #0085ff;
+    }
+  }
+}
+.workflow-palette-container {
+  background-color: #fff;
+  z-index: 1;
+  overflow: auto;
+  &.viewer {
+    overflow: hidden;
+  }
+  flex: 1;
+  .flow-node-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 60px;
+    font-weight: 500;
+  }
+  .delete-node {
+    position: absolute;
+    transition: unset;
+    top: 0;
+    left: 10px;
+    z-index: 9;
+  }
+}
+.workflow-properties-container {
+  width: 268px;
+  transition: width ease 0.15s;
+  border-left: 1px solid #f0f0f0;
+  background-color: #fff;
+  z-index: 101;
+  overflow: hidden;
+  overflow-y: scroll;
+  &.fold {
+    // width: 0;
+    display: none;
+  }
+  .properties-header {
+    display: flex;
+    width: 100%;
+    line-height: 50px;
+    border-bottom: 1px solid #f0f0f0;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    box-sizing: border-box;
+    .header-title {
+      padding-right: 16px;
+      margin: 0;
+    }
+  }
+  .property-info {
+    font-size: 12px;
+    margin-left: 4px;
+    margin-right: 0px;
+  }
+  .form-wrapper {
+    padding: 12px 16px;
+    :global(.ant-btn-dangerous.ant-btn-link) {
+      left: -6px;
+    }
+    .any-item {
+      :global(.form-field-label) {
+        width: 150px;
+      }
+    }
+    .rule-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #999;
+      .add-rule {
+        cursor: pointer;
+        color: #1890ff;
+      }
+    }
+    .rule-detail-container {
+      padding: 10px 0;
+      .edite-btn {
+        color: #0085ff;
+        cursor: pointer;
+        margin-left: 10px;
+      }
+      .users-title {
+        font-weight: bold;
+        margin-top: 10px;
+      }
+      .users-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        .user-item {
+          margin: 5px;
+          display: flex;
+          flex-wrap: nowrap;
+          align-items: center;
+        }
+      }
+      .field-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+        &:hover {
+          color: #0085ff;
+        }
+        .field-item-title {
+          white-space: nowrap;
+          margin-right: 12px;
+        }
+      }
+      .compare-text {
+        margin: 0 6px;
+        font-weight: bold;
+      }
+    }
+  }
+  .property-wrapper {
+    padding: 0px 16px;
+    .attribute-line-info {
+      color: #666;
+      margin-bottom: 5px;
+      .attribute-line-info-name {
+        color: #848c9f;
+        font-weight: 500;
+      }
+      span:nth-child(2) {
+       float: right;
+       cursor: pointer;
+      }
+    }
+    :global {
+     .form-field-error-message-wrapper {
+       min-height: 16px;
+     }
+    }
+    .add-attribute {
+     cursor: pointer;
+     color: #1890ff;
+     display: inline-block;
+    }
+  }
+    
+  .script-editor-container {
+    padding-left: 12px;
+  }
+}
+.property-info-tooltip {
+  width: 268px;
+}
