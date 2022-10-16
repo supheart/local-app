@@ -1,0 +1,95 @@
+
+// status-container
+.workflow-status-container {
+  position: relative;
+  padding: 0px;
+  width: 280px;
+  border-right: 1px solid #f0f0f0;
+  transition: width ease 0.15s;
+  .workflow-status-content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  &.fold {
+    width: 0;
+    padding-left: 0;
+    padding-right: 0;
+    .workflow-status-content {
+      opacity: 0;
+    }
+  }
+  .workflow-status-icon {
+    position: absolute;
+    font-size: 20px;
+    line-height: 20px;
+    top: 8px;
+    right: 0;
+    transform: translate(50%);
+    z-index: 10;
+    background-color: #fff;
+    cursor: pointer;
+    color: #666;
+    &:hover {
+      opacity: 0.7;
+    }
+    &:active {
+      opacity: 1;
+    }
+    &.fold {
+      transform: rotate(180deg) translate(-100%);
+    }
+  }
+  .status-content-header {
+    padding-top: 16px;
+    height: 86px;
+    margin: 0 16px;
+  }
+  .status-content-body {
+    flex: 1;
+    margin-left: 16px;
+    padding-right: 16px;
+    overflow-y: auto;
+  }
+  .status-wrapper {
+    padding-top: 12px;
+  }
+}
+
+// status-button
+span.status-button {
+  position: relative;
+  width: 100%;
+  min-width: 100px;
+  cursor: pointer;
+  user-select: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 14px;
+  line-height: 20px;
+  padding: 8px;
+  padding-left: 10px;
+  background-color: #f4f4f5;
+  margin-bottom: 8px;
+  cursor: grab;
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border-radius: 2px;
+
+  &.disabled {
+    cursor: no-drop;
+    opacity: 0.5;
+    padding: 7px;
+    border: 1px solid #979797;
+  }
+  .status-icon {
+    position: absolute;
+    display: block;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 3px;
+  }
+}
